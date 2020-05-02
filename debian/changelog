@@ -1,0 +1,5 @@
+podman (1.9.1-0) eoan; urgency=medium
+
+  * V 1.9.1 debian/ubuntu packaging
+
+ -- Jonathan Springer <jonpspri@gmail.com>  Sun, 03 May 2020 21:30:44 -0400
