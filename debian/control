@@ -18,6 +18,7 @@ Vcs-Git: https://github.com/containers/libpod.git
 Package: podman
 Architecture: any
 Depends: ${misc:Depends},${shlibs:Depends},
+  conmon,
   containers-common (>= 0.2.0),
   libgpgme11,
   libseccomp2
