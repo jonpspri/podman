@@ -2,7 +2,7 @@ Source: podman
 Section: devel
 Priority: optional
 Maintainer: Jonathan Springer <jonpspri@unknown>
-Build-Depends: debhelper-compat (= 12),
+Build-Depends: debhelper-compat (= 11),
   bash-completion,
   dh-golang,
   golang-go,
