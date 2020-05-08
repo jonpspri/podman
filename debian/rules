@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 # See debhelper(7) (uncomment to enable)
 # output every command that modifies files on the build system.
-export DH_VERBOSE = 1
+#export DH_VERBOSE = 1
 
 # see FEATURE AREAS in dpkg-buildflags(1)
 #export DEB_BUILD_MAINT_OPTIONS = hardening=+all
@@ -18,6 +18,10 @@ export GO111MODULE := on
 export GOFLAGS := -mod=vendor
 export DH_GOLANG_GO_GENERATE := 1
 export DH_GOLANG_INSTALL_EXTRA := pkg/varlink/io.podman.varlink
+
+export BUILDDIR := $(shell pwd)
+export DESTDIR := $(BUILDDIR)/debian/podman
+export PREFIX := /usr
 
 GCFLAGS ?= all=-trimpath=${PWD}
 ASMFLAGS ?= all=-trimpath=${PWD}
@@ -39,8 +43,7 @@ BUILDTAGS ?= \
 
 DOCSOURCEDIR := docs/source/markdown
 DOCTARGETDIR=$(wildcard obj-*-linux-gnu)/docs
-DOC_LIST := $(shell ls $(DOCSOURCEDIR)/podman*.1.md | \
-												sed -e 's/\.1\.md//g')
+DOC_LIST := $(shell ls $(DOCSOURCEDIR)/podman*.1.md | sed -e 's/\.1\.md//g')
 
 %:
 	dh $@ --buildsystem=golang --with=golang,bash-completion
@@ -48,17 +51,18 @@ DOC_LIST := $(shell ls $(DOCSOURCEDIR)/podman*.1.md | \
 override_dh_auto_build:
 	#pwd && ls -d obj*
 	dh_auto_build --buildsystem=golang -- \
-			$(BUILDFLAGS) -gcflags '$(GCFLAGS)' -asmflags '$(ASMFLAGS)' \
-			-ldflags '$(LDFLAGS_PODMAN)' -tags "ABISupport $(BUILDTAGS)"
+		$(BUILDFLAGS) -gcflags '$(GCFLAGS)' -asmflags '$(ASMFLAGS)' \
+		-ldflags '$(LDFLAGS_PODMAN)' -tags "ABISupport $(BUILDTAGS)"
 	mkdir -p $(DOCTARGETDIR)
 	$(foreach doc,$(DOC_LIST), \
-			go-md2man -in $(doc).1.md -out $(DOCTARGETDIR)/$(shell basename $(doc)).1;)
+		go-md2man -in $(doc).1.md -out $(DOCTARGETDIR)/$(shell basename $(doc)).1;)
 	cp $(DOCSOURCEDIR)/links/*.1 $(DOCTARGETDIR)/
 
 override_dh_auto_test:
 
 override_dh_auto_install:
 	dh_auto_install -- --no-source
+	make install.systemd
 
 override_dh_installman:
 	dh_installman $(DOCTARGETDIR)/*.1

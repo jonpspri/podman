@@ -1,0 +1,2 @@
+cni/87-podman-bridge.conflist etc/cni/net.d
+libpod.conf usr/share/containers
