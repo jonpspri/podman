@@ -14,15 +14,17 @@ Standards-Version: 4.4.1
 Homepage: https://github.com/containers/libpod
 Vcs-Browser: https://github.com/containers/libpod
 Vcs-Git: https://github.com/containers/libpod.git
+XS-Go-Import-Path: github.com/containers/libpod
 
 Package: podman
 Architecture: any
 Depends: ${misc:Depends},${shlibs:Depends},
-  conmon,
+  conmon (>=1.0.0),
   containers-common (>= 0.2.0),
   libgpgme11,
   libseccomp2,
   runc
+Recommends: containernetworking-plugins (>=0.8.1)
 Description: a library used to create container pods. Home of Podman.
  At a high level, the scope of libpod and Podman is the following:
  .
